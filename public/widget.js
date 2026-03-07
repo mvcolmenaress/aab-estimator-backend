@@ -43,7 +43,7 @@
       resultDiv.innerHTML = "Calculating...";
 
       try {
-        const response = await fetch("http://localhost:3000/estimate", {
+        const response = await fetch("https://aab-estimator-backend.onrender.com/estimate", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
