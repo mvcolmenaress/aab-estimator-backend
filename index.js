@@ -90,7 +90,7 @@ Keep responses concise, warm, and professional. You represent a trusted local sh
         "anthropic-version": "2023-06-01",
       },
       body: JSON.stringify({
-        model: "claude-sonnet-4-5",
+        "claude-haiku-4-5-20251001",
         max_tokens: 1024,
         system: systemPrompt,
         messages,
