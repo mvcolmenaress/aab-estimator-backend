@@ -9,7 +9,15 @@ const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-app.use(cors());
+app.use(cors({
+  origin: [
+    "https://orchid-armadillo-ehb8.squarespace.com",
+    "http://localhost:3000",
+    /\.squarespace\.com$/,
+    /\.sqsp\.net$/,
+  ],
+  methods: ["GET", "POST"],
+}));
 app.use(express.json());
 
 // Serve widget.js from public folder
