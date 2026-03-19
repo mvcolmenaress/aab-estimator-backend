@@ -10,11 +10,13 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 app.use(cors({
-  origin: [
+origin: [
     "https://orchid-armadillo-ehb8.squarespace.com",
+    "https://raw.githack.com",
     "http://localhost:3000",
     /\.squarespace\.com$/,
     /\.sqsp\.net$/,
+    /\.githack\.com$/,
   ],
   methods: ["GET", "POST"],
 }));
