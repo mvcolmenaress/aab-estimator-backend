@@ -95,3 +95,6 @@ export function calculateEstimate(structured) {
     assumptions: [
       "Estimate is based on the details you provided.",
       "Final pricing may change after inspection and hidden damage review.",
+    ],
+  };
+}
