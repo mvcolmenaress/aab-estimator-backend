@@ -10,7 +10,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 app.use(cors({
-origin: [
+  origin: [
     "https://orchid-armadillo-ehb8.squarespace.com",
     "https://raw.githack.com",
     "http://localhost:3000",
@@ -22,12 +22,10 @@ origin: [
 }));
 app.use(express.json());
 
-// Serve widget.js from public folder
 app.get("/widget.js", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "widget.js"));
 });
 
-// Health check
 app.get("/health", (req, res) => {
   res.json({
     ok: true,
@@ -36,7 +34,6 @@ app.get("/health", (req, res) => {
   });
 });
 
-// AI-powered estimate route
 app.post("/chat", async (req, res) => {
   const { messages } = req.body || {};
 
@@ -50,7 +47,7 @@ app.post("/chat", async (req, res) => {
   }
 
   try {
-    const systemPrompt = `You are a friendly auto body repair estimator assistant for Addison Auto Body (AAB), a professional auto body shop. 
+    const systemPrompt = `You are a friendly auto body repair estimator assistant for Addison Auto Body (AAB), a professional auto body shop.
 
 Your job is to:
 1. Greet the customer warmly and ask about their vehicle damage
@@ -63,7 +60,7 @@ Your job is to:
    - Whether they have insurance and their deductible (optional)
 3. Once you have enough info, provide a friendly estimate summary
 
-When you have enough information to estimate, end your message with a JSON block in this exact format (the system will parse it):
+When you have enough information to estimate, end your message with a JSON block in this exact format:
 <ESTIMATE>
 {
   "service_category": "Collision Repair",
@@ -90,7 +87,7 @@ Keep responses concise, warm, and professional. You represent a trusted local sh
         "anthropic-version": "2023-06-01",
       },
       body: JSON.stringify({
-        "claude-haiku-4-5-20251001",
+        model: "claude-haiku-4-5-20251001",
         max_tokens: 1024,
         system: systemPrompt,
         messages,
@@ -100,12 +97,12 @@ Keep responses concise, warm, and professional. You represent a trusted local sh
     const data = await response.json();
 
     if (!response.ok) {
+      console.error("Anthropic API error:", JSON.stringify(data));
       return res.status(500).json({ ok: false, message: data.error?.message || "AI error" });
     }
 
     const text = data.content?.[0]?.text || "";
 
-    // Check if AI included an ESTIMATE block
     const estimateMatch = text.match(/<ESTIMATE>([\s\S]*?)<\/ESTIMATE>/);
     let estimate = null;
 
@@ -118,7 +115,6 @@ Keep responses concise, warm, and professional. You represent a trusted local sh
       }
     }
 
-    // Strip the ESTIMATE block from the message shown to user
     const cleanText = text.replace(/<ESTIMATE>[\s\S]*?<\/ESTIMATE>/, "").trim();
 
     return res.json({
@@ -127,12 +123,11 @@ Keep responses concise, warm, and professional. You represent a trusted local sh
       estimate,
     });
   } catch (err) {
-    console.error(err);
+    console.error("Server error:", err);
     return res.status(500).json({ ok: false, message: "Server error" });
   }
 });
 
-// Start server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
